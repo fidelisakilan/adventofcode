@@ -7,6 +7,8 @@ r = len(matrix)
 c = len(matrix[0])
 
 directions = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+# traversed will contain each point with then corresponding region
+# k = point(x, y), v = region_index
 traversed = {}
 
 
@@ -27,34 +29,36 @@ for i in range(r):
             find_region(i, j, matrix[i][j], nxt)
             nxt += 1
 
+# reverse of traversed which will have set of points which belong to a region
+# k = region_index, v = list of points
 regions = defaultdict(set)
 
-for k, nodes in traversed.items():
-    regions[nodes].add(k)
+for k, v in traversed.items():
+    regions[v].add(k)
 
 part1 = 0
 part2 = 0
-for k, nodes in regions.items():
+for region, nodes in regions.items():
     area = len(nodes)
+    # contain all nodes which are in the outer part of the region along with the outer index
     per = []
     for node in nodes:
         for di, dj in directions:
             ni, nj = node[0] + di, node[1] + dj
             if ni not in range(r) or nj not in range(c) or (ni, nj) not in nodes:
-                per.append((node, (ni, nj)))
+                per.append((node, (di, dj)))
     per = set(per)
-    per2 = set()
+    # contains all the unique nodes in the outer part of the region facing a direction
+    sides = set()
     for p1, p2 in per:
         keep = True
         for dx, dy in [(1, 0), (0, 1)]:
             p1n = (p1[0] + dx, p1[1] + dy)
-            p2n = (p2[0] + dx, p2[1] + dy)
+            p2n = (p2[0], p2[1])
             if (p1n, p2n) in per:
                 keep = False
         if keep:
-            per2.add((p1, p2))
-
+            sides.add((p1, (p1[0] + p2[0], p1[1] + p2[1])))
     part1 += area * len(per)
-    part2 += area * len(per2)
-    print(len(per2), per2, "\n")
+    part2 += area * len(sides)
 print(part1, part2)
