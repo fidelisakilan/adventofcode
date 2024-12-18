@@ -33,6 +33,7 @@ def adjs(cur):
 
 
 # dijkstra's
+# x, y dir
 start = (sx, sy, sd)
 pq = []
 p1 = None
