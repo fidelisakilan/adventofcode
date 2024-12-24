@@ -48,8 +48,6 @@ while len(pq) > 0:
         if p1 is None:
             p1 = dist
             print(dist)
-        # for p1
-        # break
     for d, adj in adjs(cur):
         if dist + d < dists[adj]:
             dists[adj] = dist + d
